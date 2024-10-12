@@ -1,7 +1,7 @@
 Getting Started Building an Application
 ==========================================================
 
-Now that we have seen how a device can join an already-configured application, and synchronize its view of the data with the ODK-X Sync Endpoint server hosting the application, it is time to set up our own ODK-X application.
+Now that we have seen how a device can join an already-configured application and synchronize its view of the data with the ODK-X Sync Endpoint server hosting the application, it is time to set up our own ODK-X application.
 
 .. contents:: :local:
 
@@ -9,13 +9,12 @@ Now that we have seen how a device can join an already-configured application, a
 
 Prerequisites
 ------------------
-This guide continues the tour where :doc:`survey-sample-app` left off. If you haven't yet completed that tour, do it first. When you have concluded the tour of the :doc:`survey-using` example application's screens, return to this guide and we will turn to setting up our own application.
+This guide continues the tour where :doc:`survey-sample-app` left off. If you haven't yet completed that tour, do it first. When you have concluded the tour of the :doc:`survey-using` example application's screens, return to this guide, and we will turn to setting up our own application.
 
 .. _architect-odk-x-config-setup-app-designer:
 
 Setting up ODK-X Application Designer
 -----------------------------------------
-
 Read the :ref:`Intro <app-designer-intro>` and :ref:`Overview <app-designer-overview>` sections to get a sense of the features and functionality of the ODK-X Application Designer environment (we will install it below). Follow this guide to :doc:`app-designer-setup`.
 
 Finally, follow this guide to :doc:`app-designer-launching`.
@@ -32,7 +31,7 @@ And a :program:`Chrome` browser window should open to display:
 
 If a :program:`Chrome` browser does not open, try manually launching it and opening http://localhost:8000/index.html.
 
-You can further verify that the Application Designer works by clicking on the :guilabel:`exampleForm` button, then clicking on :guilabel:`Follow link`. This opens the *Example Form* on your computer, and simulates all the features available to you on your device.
+You can further verify that the Application Designer works by clicking on the :guilabel:`exampleForm` button, then clicking on :guilabel:`Follow link`. This opens the *Example Form* on your computer and simulates all the features available to you on your device.
 
 You can also try other things, like choosing different device dimensions to see how the form renders on different screen geometries.
 
@@ -40,7 +39,6 @@ You can also try other things, like choosing different device dimensions to see 
 
 Modifying an ODK-X application
 -------------------------------------
-
 The next task is to modify the *Example Form* application by adding a new data field to it.
 
 Return to your :program:`cmd` window and once again launch the ODK-X Application Designer environment (and a :program:`Chrome` browser) by typing:
@@ -80,8 +78,20 @@ You should now see some JSON in the output window. Hit the :guilabel:`Save to Fi
 4. Writing the updated `ODK-X Survey <https://docs.odk-x.org/survey-using/>`_ form definition into the :file:`formDef.json` file in the same location as the :file:`exampleForm.xlsx` file.
 
 .. note::
+  **Manual Saving (When Automatic Saving Fails)**
+
+  .. this instruction is needed when automatic saving fails in this case these .
+  
+  In case you encounter an error with the :guilabel:`Save to File System` button (e.g., "Something went wrong! Please save the file manually"), follow these steps to manually save the generated JSON:
+
+  1. Copy the JSON output displayed in the output window.
+  2. Open a text editor (like Notepad, VSCode, or Sublime Text).
+  3. Paste the JSON into a new file.
+  4. Save the file with the name `formDef.json` in the same location as the `exampleForm.xlsx` file (typically :file:`app/config/tables/exampleForm/forms/exampleForm`).
+  5. Repeat this process for any other files that failed to save (e.g., :file:`definition.csv`, :file:`properties.csv`), if needed.
 
   The :file:`definition.csv` and :file:`properties.csv` files are updated because the *form_id* is the same as the *table_id*.
+
 
 On the :program:`Chrome` Browser, click on the :guilabel:`Preview` tab. Click on :guilabel:`Purge Database`. This will delete the earlier *Example Form* data table -- a necessary step because we are adding a :th:`Color` column to that data table. Select :guilabel:`exampleForm` if you do not already have that form open.
 
@@ -96,17 +106,15 @@ You have successfully modified the form. We will now walk through how to deploy 
 
 Deploying to the Device
 -----------------------------------------------
-
 Now that we have the design environment installed and have successfully modified the Example Form application, we can work through the steps of deploying that application to your device.
 
 .. _architect-odk-x-deploy-prepare:
 
 Preparing the Device
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 If you followed along with the :doc:`survey-sample-app`, you should already have all the necessary tools installed on your device. If not, follow the :doc:`basics-install` instructions to install ODK-X Services, `ODK-X Survey <https://docs.odk-x.org/survey-using/>`_, and ODK-X Tables.
 
-First, open the :guilabel:`Files by Google` app on the device. Delete the whole :guilabel:`opendatakit` folder by clicking the folder and holding it until it becomes highlighted in blue. Then press the delete icon, and click :guilabel:`OK` in the resulting window.
+First, open the :guilabel:`Files by Google` app on the device. Delete the whole :guilabel:`opendatakit` folder by clicking the folder and holding it until it becomes highlighted in blue. Then press the delete icon and click :guilabel:`OK` in the resulting window.
 
 .. image:: /img/getting-started-2/file-manager-delete-folder.*
   :alt: Delete opendatakit folder in OI File Manager
@@ -130,59 +138,4 @@ Finally, confirm that your device has :guilabel:`USB debugging` enabled inside y
 
 Pushing the Application to the Device
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Return to the :program:`cmd` window on your computer. :kbd:`Control-C` to stop the :program:`grunt` command that popped-open the :program:`Chrome` browser. On Windows, you will be asked to confirm this ``Terminate batch job (Y/N)?``. Enter ``Y`` to confirm.
-
-Connect your device to your computer via USB. Wait for the storage connection to be established (on Windows, this will generally pop up a file browser or an options box that enables you to select a file browser). Be sure you trust your computer on your Android device, or it will cause unexpected errors.
-
-At the command prompt, navigate to the Application Designer folder and type:
-
-.. code-block:: console
-
-  $ grunt adbpush
-
-.. warning::
-
-  This command will force-close ODK-X Services, Survey, and Tables, and it will clear all ODK-X data from the device. The data you are pushing will overwrite any existing application or collected data you might have. Be sure to make backups and be sure you are ready before running this command.
-
-This pushes the configured ODK-X application within this ODK-X Application Designer directory to your device. When you issue this command, the cmd window will display a long series of commands and conclude with a display of overall progress and timings:
-
-.. image:: /img/getting-started-2/geotagger-cmd-gruntpush.*
-  :alt: Geotagger Grunt Push
-
-Now, on your device, launch `ODK-X Survey <https://docs.odk-x.org/survey-using/>`_.
-
-This will initiate the configuration of `ODK-X Survey <https://docs.odk-x.org/survey-using/>`_ and conclude with a :guilabel:`Configuration Summary` pop-up reporting that everything was imported successfully. Click :guilabel:`OK`.
-
-Scroll to and select the *Example Form*. Create a new instance of the survey, and click :guilabel:`Go to next prompt`. You should now be looking at the question you added to the form.
-
-You have now successfully deployed a modified ODK-X application onto a device.
-
-
-Next Steps
------------------------
-
-Survey and Tables each have a basic sample application that walks through their features:
-
-  - :doc:`survey-sample-app`
-  - :doc:`tables-sample-app`
-
-
-To get started building applications, first set up the :doc:`app-designer-intro`. After you have familiarized yourself with that tool, you can try building and deploying an application:
-
-  - :doc:`build-app`
-
-A more complete guide to using ODK-X XLSX Converter is provided in the :doc:`xlsx-converter-intro` documentation. More details about Tables web views are available in :doc:`tables-web-pages` and :doc:`injected-interfaces`.
-
-For examples of real world applications and details about they are implemented, try out the: :doc:`reference-apps`.
-
-We also provide guides for setting up your own ODK-X application for each of the Android and Desktop tools.
-
-  - :doc:`survey-using`
-  - :doc:`tables-managing`
-  - :doc:`services-managing`
-  - :doc:`scan-managing`
-
-However, the user guides for these tools are also useful for everyone.
-
-Finally, to expand your knowledge of the more advanced features of the platform, such as data permission filters, read the :doc:`advanced-topics-architect`.
+Return to the :program:`cmd` window on your computer. :kbd:`Control
